@@ -1,19 +1,7 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+
+from ofoscar_backend.routers.auth import router as auth_router
 
 app = FastAPI()
 
-class Project(BaseModel):
-  title: str
-  description: str
-
-projects = []
-
-@app.get("/projects")
-def get_projects():
-  return projects
-
-@app.post("/projects")
-def add_project(project: Project):
-  projects.append(project)
-  return project
+app.include_router(auth_router)
