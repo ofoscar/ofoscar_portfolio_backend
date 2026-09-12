@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 from ofoscar_backend.core.config import settings
 
 from ofoscar_backend.core.security import (
   create_access_token,
+  decode_access_token,
   verify_password,
 )
 from ofoscar_backend.schemas.auth import LoginRequest, TokenResponse
@@ -12,21 +14,23 @@ router = APIRouter(
   tags=["Authentication"],
 )
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
 ADMIN_EMAIL = settings.admin_email
 
-ADMIN_PASSWORD_HASH = settings.admin_password_hash
-
 @router.post("/login", response_model= TokenResponse)
-def login(credentials: LoginRequest):
-  if credentials.email != ADMIN_EMAIL:
+def login(
+  form_data: OAuth2PasswordRequestForm = Depends(),
+):
+  if form_data.username != settings.admin_email:
     raise HTTPException(
       status_code=status.HTTP_401_UNAUTHORIZED,
-      detail="Invalid credentials",
+      detail="Invalid credentials"
     )
 
   if not verify_password(
-    credentials.password,
-    ADMIN_PASSWORD_HASH,
+    form_data.password,
+    settings.admin_password_hash,
   ):
     raise HTTPException(
       status_code=status.HTTP_401_UNAUTHORIZED,
@@ -34,9 +38,31 @@ def login(credentials: LoginRequest):
     )
 
   access_token = create_access_token(
-    subject=credentials.email,
+    subject=form_data.username,
   )
 
-  return TokenResponse(
-    access_token=access_token,
-  )
+  return {
+    "access_token": access_token,
+    "token_type": "bearer",
+  }
+
+def get_current_admin(
+    token: str = Depends(oauth2_scheme),
+) -> str:
+  email = decode_access_token(token)
+
+  if email != settings.admin_email:
+    raise HTTPException(
+      status_code=status.HTTP_401_UNAUTHORIZED,
+      detail="Invalid credentials",
+    )
+
+  return email
+
+@router.get("/me")
+def get_me(
+  current_admin: str = Depends(get_current_admin),
+):
+  return {
+    "email":current_admin
+  }

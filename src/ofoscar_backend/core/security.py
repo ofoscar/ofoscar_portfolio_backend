@@ -1,6 +1,8 @@
+from fastapi import HTTPException, status
 from datetime import datetime, timedelta, timezone
 from ofoscar_backend.core.config import settings
 import jwt
+from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 
 SECRET_KEY = settings.secret_key
@@ -30,3 +32,28 @@ def create_access_token(subject: str) -> str:
     SECRET_KEY,
     algorithm=ALGORITHM
   )
+
+def decode_access_token(token:str) -> str:
+  try:
+    payload = jwt.decode(
+      token,
+      settings.secret_key,
+      algorithms=[ALGORITHM],
+    )
+
+    subject = payload.get("sub")
+
+    if subject is None:
+      raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid token",
+      )
+
+    return subject
+
+  except InvalidTokenError:
+    raise HTTPException(
+      status_code=status.HTTP_401_UNAUTHORIZED,
+      detail="Invalid token",
+    )
+  
