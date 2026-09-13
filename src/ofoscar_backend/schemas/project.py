@@ -9,4 +9,8 @@ class ProjectCreate(BaseModel):
 
 class ProjectResponse(ProjectCreate):
   id:int
+
+  model_config = {
+    "from_attributes": True
+  }
   

@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
 from ofoscar_backend.routers.auth import get_current_admin
 from ofoscar_backend.schemas.project import ProjectCreate, ProjectResponse
+from ofoscar_backend.models.project import Project
+
+from ofoscar_backend.database.session import get_db
 
 router = APIRouter(
   prefix="/projects",
@@ -11,12 +15,15 @@ router = APIRouter(
 projects: list[dict] = []
 
 @router.get("", response_model=list[ProjectResponse])
-def get_projects():
-    return [
-      project
-      for project in projects
-      if project["published"] is True
-    ]
+def get_projects(
+    db: Session = Depends(get_db)
+):
+    return (
+      db.query(Project)
+      .filter(Project.published.is_(True))
+      .all()
+      )
+    
 
 @router.post(
     "",
@@ -25,14 +32,16 @@ def get_projects():
 )
 def create_project(
     project: ProjectCreate,
+    db: Session = Depends(get_db),
     current_admin: str = Depends(get_current_admin)
 ):
-    new_project = {
-        "id": len(projects) + 1,
+    new_project = Project(
         **project.model_dump(),
-    }
+    )
 
-    projects.append(new_project)
+    db.add(new_project)
+    db.commit()
+    db.refresh(new_project)
 
     return new_project
 
