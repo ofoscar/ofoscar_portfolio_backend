@@ -46,15 +46,10 @@ def create_project(
     return new_project
 
 @router.get("/{project_id}", response_model=ProjectResponse)
-def get_project(project_id: int):
-    project = next(
-        (
-            project
-            for project in projects
-            if project["id"] == project_id
-            and project["published"] == True
-        )
-    )
+def get_project(project_id: int,
+    db: Session = Depends(get_db)):
+    
+    project = db.get(Project, project_id)
 
     if project is None:
         raise HTTPException(
