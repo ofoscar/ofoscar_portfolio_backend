@@ -20,6 +20,11 @@ class Project(Base):
     nullable=True,
   )
 
+  cover_image_url: Mapped[str | None] = mapped_column(
+    String(1000),
+    nullable=True
+  )
+ 
   published: Mapped[bool] = mapped_column(
     Boolean,
     default=False
