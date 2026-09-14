@@ -29,3 +29,8 @@ class Project(Base):
     JSON,
     default = list,
   )
+
+  highlights: Mapped[list[str]] = mapped_column(
+    JSON,
+    default = list
+  )

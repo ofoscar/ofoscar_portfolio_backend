@@ -10,6 +10,14 @@ Tag = Annotated[
   )
 ]
 
+HighLight = Annotated[
+  str,
+  Field(
+    min_length = 1,
+    max_length = 125
+  )
+]
+
 class ProjectCreate(BaseModel):
   title: str
   description: str
@@ -19,6 +27,10 @@ class ProjectCreate(BaseModel):
   tags: list[Tag] = Field(
     default_factory = list,
     max_length = 10
+  )
+  highlights: list[HighLight] = Field(
+    default_factory = list,
+    max_length = 6
   )
 
 class ProjectResponse(ProjectCreate):
