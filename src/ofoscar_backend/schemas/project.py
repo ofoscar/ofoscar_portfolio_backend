@@ -23,6 +23,7 @@ class ProjectCreate(BaseModel):
   description: str
   github_url: str | None = None
   demo_url: str | None = None
+  cover_image_url: str | None = None
   published: bool = False
   tags: list[Tag] = Field(
     default_factory = list,
