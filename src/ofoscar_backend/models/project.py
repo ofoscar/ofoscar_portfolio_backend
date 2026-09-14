@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, String, Text
+from sqlalchemy import Boolean, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from ofoscar_backend.database.base import Base
@@ -23,4 +23,9 @@ class Project(Base):
   published: Mapped[bool] = mapped_column(
     Boolean,
     default=False
+  )
+
+  tags: Mapped[list[str]] = mapped_column(
+    JSON,
+    default = list,
   )
