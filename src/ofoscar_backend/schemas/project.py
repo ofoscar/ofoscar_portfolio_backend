@@ -2,6 +2,20 @@ from typing import Annotated
 
 from pydantic import BaseModel,Field
 
+class ProjectImageCreate(BaseModel):
+  image_url: str
+  description: str | None = Field(
+    default=None,
+    max_length=500
+  )
+
+class ProjectImageResponse(ProjectImageCreate):
+  id: int
+
+  model_config = {
+    "from_attributes": True
+  }
+
 Tag = Annotated[
   str,
   Field(
@@ -34,8 +48,15 @@ class ProjectCreate(BaseModel):
     max_length = 6
   )
 
+  images: list[ProjectImageCreate] = Field(
+    default_factory=list,
+    max_length = 15
+  )
+
 class ProjectResponse(ProjectCreate):
   id:int
+
+  images: list[ProjectImageResponse]
 
   model_config = {
     "from_attributes": True

@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, JSON, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from ofoscar_backend.models.project_image import ProjectImage
 from ofoscar_backend.database.base import Base
 
 class Project(Base):
@@ -38,4 +38,9 @@ class Project(Base):
   highlights: Mapped[list[str]] = mapped_column(
     JSON,
     default = list
+  )
+
+  images: Mapped[list["ProjectImage"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan"
   )

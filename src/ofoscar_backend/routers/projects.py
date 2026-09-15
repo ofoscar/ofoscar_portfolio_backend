@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from ofoscar_backend.routers.auth import get_current_admin
 from ofoscar_backend.schemas.project import ProjectCreate, ProjectResponse
 from ofoscar_backend.models.project import Project
+from ofoscar_backend.models.project_image import ProjectImage
 
 from ofoscar_backend.database.session import get_db
 
@@ -35,9 +36,21 @@ def create_project(
     db: Session = Depends(get_db),
     current_admin: str = Depends(get_current_admin)
 ):
-    new_project = Project(
-        **project.model_dump(),
+    project_data = project.model_dump(
+        exclude={"images"}
     )
+    
+    new_project = Project(
+        **project_data
+    )
+
+    new_project.images= [
+        ProjectImage(
+            image_url=image.image_url,
+            description=image.description
+        )
+        for image in project.images
+    ]
 
     db.add(new_project)
     db.commit()
