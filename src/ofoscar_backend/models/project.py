@@ -1,6 +1,6 @@
-from sqlalchemy import Boolean, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy import Boolean, JSON, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from ofoscar_backend.models.project_image import ProjectImage
 from ofoscar_backend.database.base import Base
 
 class Project(Base):
@@ -20,7 +20,27 @@ class Project(Base):
     nullable=True,
   )
 
+  cover_image_url: Mapped[str | None] = mapped_column(
+    String(1000),
+    nullable=True
+  )
+ 
   published: Mapped[bool] = mapped_column(
     Boolean,
     default=False
+  )
+
+  tags: Mapped[list[str]] = mapped_column(
+    JSON,
+    default = list,
+  )
+
+  highlights: Mapped[list[str]] = mapped_column(
+    JSON,
+    default = list
+  )
+
+  images: Mapped[list["ProjectImage"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan"
   )
