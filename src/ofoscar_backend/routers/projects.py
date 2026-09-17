@@ -71,3 +71,27 @@ def get_project(project_id: int,
         )
 
     return project
+
+@router.delete(
+    "/{project_id}",
+    status_code=status.HTTP_204_NO_CONTENT
+)
+def delete_project(
+    project_id: int,
+    db: Session = Depends(get_db),
+    current_admin: str = Depends(get_current_admin)
+):
+    project = (
+        db.query(Project)
+        .filter(Project.id == project_id)
+        .first()
+    )
+
+    if project is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+
+    db.delete(project)
+    db.commit()

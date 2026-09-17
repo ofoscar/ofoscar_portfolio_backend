@@ -32,3 +32,9 @@ def upload_image(
     f"{settings.minio_bucket}/"
     f"{filename}"
   )
+
+def delete_object(object_name:str) -> None:
+  client.remove_object(
+    bucket_name=settings.minio_bucket,
+    object_name=object_name
+  )
