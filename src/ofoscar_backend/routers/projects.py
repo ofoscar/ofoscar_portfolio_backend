@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from ofoscar_backend.routers.auth import get_current_admin
-from ofoscar_backend.schemas.project import ProjectCreate, ProjectResponse
+from ofoscar_backend.schemas.project import ProjectCreate, ProjectResponse, ProjectUpdate
 from ofoscar_backend.models.project import Project
 from ofoscar_backend.models.project_image import ProjectImage
 
@@ -21,7 +21,6 @@ def get_projects(
 ):
     return (
       db.query(Project)
-      .filter(Project.published.is_(True))
       .all()
       )
     
@@ -69,6 +68,46 @@ def get_project(project_id: int,
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Project not found"
         )
+
+    return project
+
+@router.patch(
+        "/{project_id}",
+        response_model=ProjectResponse
+)
+def edit_project(
+    project_id: int,
+    project_update: ProjectUpdate,
+    db: Session = Depends(get_db),
+    current_admin: str = Depends(get_current_admin)
+):
+    project = db.get(Project, project_id)
+
+    if project is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found",
+        )
+
+    update_data = project_update.model_dump(
+        exclude_unset=True,
+        exclude={"images"},
+    )
+
+    for field, value in update_data.items():
+        setattr(project, field, value)
+
+    if project_update.images is not None:
+        project.images = [
+            ProjectImage(
+                image_url=image.image_url,
+                description=image.description,
+            )
+            for image in project_update.images
+        ]
+
+    db.commit()
+    db.refresh(project)
 
     return project
 

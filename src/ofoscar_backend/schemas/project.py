@@ -32,6 +32,16 @@ HighLight = Annotated[
   )
 ]
 
+class ProjectUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    github_url: str | None = None
+    demo_url: str | None = None
+    cover_image_url: str | None = None
+    published: bool | None = None
+    tags: list[Tag] | None = None
+    images: list[ProjectImageCreate] | None = None
+
 class ProjectCreate(BaseModel):
   title: str
   description: str
