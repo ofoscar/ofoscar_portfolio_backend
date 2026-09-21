@@ -94,6 +94,16 @@ def edit_project(
         exclude={"images"},
     )
 
+    if "cover_image_url" in update_data:
+        new_cover_url = update_data["cover_image_url"]
+        old_cover_url = project.cover_image_url
+
+        if (
+            old_cover_url
+            and old_cover_url != new_cover_url
+        ):
+            delete_image(old_cover_url)
+
     for field, value in update_data.items():
         setattr(project, field, value)
 
