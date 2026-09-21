@@ -5,7 +5,7 @@ from ofoscar_backend.routers.auth import get_current_admin
 from ofoscar_backend.schemas.project import ProjectCreate, ProjectResponse, ProjectUpdate
 from ofoscar_backend.models.project import Project
 from ofoscar_backend.models.project_image import ProjectImage
-
+from ofoscar_backend.services.storage import delete_image
 from ofoscar_backend.database.session import get_db
 
 router = APIRouter(
@@ -131,6 +131,13 @@ def delete_project(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Project not found"
         )
+
+    if project.cover_image_url:
+        delete_image(project.cover_image_url)
+
+    if project.images: 
+        for image in project.images:
+            delete_image(image.image_url)
 
     db.delete(project)
     db.commit()
