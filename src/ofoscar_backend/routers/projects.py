@@ -107,7 +107,23 @@ def edit_project(
     for field, value in update_data.items():
         setattr(project, field, value)
 
+
     if project_update.images is not None:
+        old_image_urls = {
+            image.image_url
+            for image in project.images
+        }
+
+        new_image_urls = {
+            image.image_url
+            for image in project_update.images
+        }
+
+        removed_image_urls = old_image_urls - new_image_urls
+
+        for image_url in removed_image_urls:
+            delete_image(image_url)
+
         project.images = [
             ProjectImage(
                 image_url=image.image_url,
