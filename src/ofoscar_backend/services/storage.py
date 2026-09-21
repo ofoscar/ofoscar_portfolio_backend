@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 from uuid import uuid4
 
 from minio import Minio
@@ -33,8 +35,23 @@ def upload_image(
     f"{filename}"
   )
 
-def delete_object(object_name:str) -> None:
-  client.remove_object(
-    bucket_name=settings.minio_bucket,
-    object_name=object_name
-  )
+def get_object_name_from_url(url: str) -> str:
+    parsed = urlparse(url)
+
+    path = parsed.path.lstrip("/")
+
+    bucket_prefix = f"{settings.minio_bucket}/"
+
+    if not path.startswith(bucket_prefix):
+        raise ValueError("URL does not belong to configured MinIO bucket")
+
+    return path.removeprefix(bucket_prefix)
+
+
+def delete_image(url: str) -> None:
+    object_name = get_object_name_from_url(url)
+
+    client.remove_object(
+        bucket_name=settings.minio_bucket,
+        object_name=object_name,
+    )
