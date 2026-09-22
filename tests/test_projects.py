@@ -18,7 +18,7 @@ def test_create_project():
     }
   )
 
-  assert response.status_code == 200
+  assert response.status_code == 201
   assert response.json()["title"] == "Test"
 
 def test_get_projects():
