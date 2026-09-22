@@ -52,29 +52,29 @@ jobs:
       - name: Run tests
         run: uv run pytest
 
-build-image:
-    needs: test
-    runs-on: ubuntu-latest
+  build-image:
+      needs: test
+      runs-on: ubuntu-latest
 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v7
 
-      - name: Log in to GHCR
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        - name: Log in to GHCR
+          uses: docker/login-action@v4
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/ofoscar-portfolio-backend:latest
-            ghcr.io/${{ github.repository_owner }}/ofoscar-portfolio-backend:${{ github.sha }}
+        - name: Build and push Docker image
+          uses: docker/build-push-action@v7
+          with:
+            context: .
+            push: true
+            tags: |
+              ghcr.io/${{ github.repository_owner }}/ofoscar-portfolio-backend:latest
+              ghcr.io/${{ github.repository_owner }}/ofoscar-portfolio-backend:${{ github.sha }}
   
