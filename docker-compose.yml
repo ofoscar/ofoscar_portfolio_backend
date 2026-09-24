@@ -1,4 +1,17 @@
 services:
+  postgres:
+    image: postgres:17
+    container_name: ofoscar-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: ofoscar
+      POSTGRES_USER: ofoscar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   minio:
     image: quay.io/minio/minio:latest
     container_name: ofoscar-minio
@@ -13,4 +26,5 @@ services:
     command: server /data --console-address ":9001"
 
 volumes:
+  postgres_data:
   minio_data:
