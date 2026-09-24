@@ -19,11 +19,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17
+
+        env:
+          POSTGRES_USER: ofoscar
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: ofoscar_test
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd="pg_isready -U ofoscar -d ofoscar_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     env:
       SECRET_KEY: test-secret-key-that-is-at-least-32-bytes
       ADMIN_EMAIL: test@example.com
       ADMIN_PASSWORD_HASH: test
-      DATABASE_URL: sqlite:///./test.db
+
+      DATABASE_URL: postgresql+psycopg2://ofoscar:testpassword@localhost:5432/ofoscar_test
+
       MINIO_ENDPOINT: localhost:9000
       MINIO_ACCESS_KEY: test
       MINIO_SECRET_KEY: test
