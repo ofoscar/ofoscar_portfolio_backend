@@ -19,7 +19,12 @@ def test_create_project():
   )
 
   assert response.status_code == 201
-  assert response.json()["title"] == "Test"
+
+  data = response.json()
+
+  assert data["title"] == "Test"
+  assert data["description"] == "Description test"
+
 
 def test_get_projects():
   client.post(
@@ -33,9 +38,9 @@ def test_get_projects():
   response = client.get("/projects")
 
   assert response.status_code == 200
-  assert len(response.json()) >= 1
-  assert any(
-        project["title"] == "Test"
-        for project in response.json()
-    )
+
+  projects = response.json()
+
+  assert len(projects) == 1
+  assert projects[0]["title"] == "Test"
 
