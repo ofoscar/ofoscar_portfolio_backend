@@ -11,7 +11,6 @@ dependencies = [
     "alembic>=1.20.0",
     "boto3>=1.43.104",
     "fastapi[standard]>=0.141.1",
-    "minio>=7.2.20",
     "psycopg2-binary>=2.9.13",
     "pwdlib[argon2]>=0.3.1",
     "pydantic-settings>=2.15.0",
