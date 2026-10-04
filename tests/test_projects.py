@@ -14,7 +14,8 @@ def test_create_project():
     "/projects",
     json ={
       "title": "Test",
-      "description": "Description test"
+      "description": "Description test",
+      "hook": "Hook test"
     }
   )
 
@@ -24,6 +25,7 @@ def test_create_project():
 
   assert data["title"] == "Test"
   assert data["description"] == "Description test"
+  assert data["hook"] == "Hook test"
 
 
 def test_get_projects():
@@ -32,6 +34,7 @@ def test_get_projects():
         json={
             "title": "Test",
             "description": "Description test",
+            "hook": "Hook test test",
         },
     )
 

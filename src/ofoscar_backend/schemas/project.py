@@ -34,6 +34,7 @@ HighLight = Annotated[
 
 class ProjectUpdate(BaseModel):
     title: str | None = None
+    hook: str | None = None
     description: str | None = None
     github_url: str | None = None
     demo_url: str | None = None
@@ -44,6 +45,7 @@ class ProjectUpdate(BaseModel):
 
 class ProjectCreate(BaseModel):
   title: str
+  hook: str
   description: str
   github_url: str | None = None
   demo_url: str | None = None
