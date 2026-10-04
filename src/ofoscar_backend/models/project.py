@@ -8,6 +8,7 @@ class Project(Base):
 
   id: Mapped[int] = mapped_column(primary_key=True)
   title: Mapped[str] = mapped_column(String(200))
+  hook: Mapped[str] = mapped_column(String(300))
   description: Mapped[str] = mapped_column(Text)
 
   github_url: Mapped[str | None] = mapped_column(
