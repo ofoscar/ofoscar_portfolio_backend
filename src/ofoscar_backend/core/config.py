@@ -5,6 +5,7 @@ class Settings(BaseSettings):
   admin_email: str
   admin_password_hash: str
   database_url: str
+  cors_origins: str = ""
 
   aws_region: str
   s3_bucket_name: str
@@ -14,5 +15,13 @@ class Settings(BaseSettings):
     env_file=".env.app",
     env_file_encoding="utf_8",
   )
+
+  @property
+  def allowed_origins(self) -> list[str]:
+    return [
+      origin.strip()
+      for origin in self.cors_origins.split(",")
+      if origin.strip()
+    ]
 
 settings = Settings()
