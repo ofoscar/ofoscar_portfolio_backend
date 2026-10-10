@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from ofoscar_backend.routers.health import router as health_router
 from ofoscar_backend.routers.auth import router as auth_router
 from ofoscar_backend.routers.projects import router as projects_router
 from ofoscar_backend.routers.uploads import router as uploads_router
@@ -16,6 +17,7 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
+app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(projects_router)
 app.include_router(uploads_router)
