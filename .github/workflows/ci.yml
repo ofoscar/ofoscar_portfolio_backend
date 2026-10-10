@@ -135,6 +135,8 @@ jobs:
               "docker compose pull",
               "docker compose run --rm api alembic upgrade head",
               "docker compose up -d",
+              "sleep 5",
+              "curl -f https://api.ofoscar.com/health",
               "docker image prune -f"
             ]' \
             --query "Command.CommandId" \
