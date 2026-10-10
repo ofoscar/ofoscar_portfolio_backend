@@ -135,8 +135,7 @@ jobs:
               "docker compose pull",
               "docker compose run --rm api alembic upgrade head",
               "docker compose up -d",
-              "sleep 5",
-              "curl -f https://api.ofoscar.com/health",
+              "for i in 1 2 3 4 5 6; do if curl -fsS https://api.ofoscar.com/health; then echo \"Health check passed\"; break; fi; if [ \"$i\" -eq 6 ]; then echo \"Health check failed after 6 attempts\"; exit 1; fi; echo \"Health check failed, retrying in 5 seconds...\"; sleep 5; done",
               "docker image prune -f"
             ]' \
             --query "Command.CommandId" \
