@@ -141,7 +141,7 @@ jobs:
               "docker compose run --rm api alembic upgrade head",
               "docker compose up -d api",
               "for i in 1 2 3 4 5 6; do if curl -fsS https://api.ofoscar.com/health; then HEALTHY=true; break; fi; echo \"Health check failed, retrying in 5 seconds...\"; sleep 5; done",
-              "if [ \"$HEALTHY\" != \"true\" ]; then echo \"Deployment failed. Rolling back to $PREVIOUS_TAG\"; export IMAGE_TAG=$PREVIOUS_TAG; docker compose pull api; docker compose up -d api; echo \"Rollback complete\"; exit 1; fi",
+              "if [ \"$HEALTHY\" != \"true\" ]; then echo \"Deployment failed. Rolling back to $PREVIOUS_TAG\"; export IMAGE_TAG=$PREVIOUS_TAG; docker compose pull api; docker compose up -d api; ROLLBACK_HEALTHY=false; for i in 1 2 3 4 5 6; do if curl -fsS https://api.ofoscar.com/health; then ROLLBACK_HEALTHY=true; echo \"Rollback health check passed\"; break; fi; echo \"Rollback health check failed, retrying in 5 seconds...\"; sleep 5; done; if [ \"$ROLLBACK_HEALTHY\" != \"true\" ]; then echo \"CRITICAL: rollback is also unhealthy\"; fi; exit 1; fi",
               "echo \"$NEW_TAG\" > .current_image_tag",
               "docker image prune -f",
               "echo \"Deployment successful: $NEW_TAG\""
