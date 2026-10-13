@@ -69,7 +69,7 @@ def login(
         key="session",
         value=access_token,
         httponly=True,
-        secure=True,
+        secure=settings.cookie_secure,
         samesite="lax",
         max_age=60 * 60,
         path="/",
@@ -77,6 +77,17 @@ def login(
 
   return {"message": "Login successful"}
 
+@router.post("/logout")
+def logout(response: Response):
+   response.delete_cookie(
+      key="session",
+      path="/",
+      secure=settings.cookie_secure,
+      httponly=True,
+      samesite="lax"
+   )
+
+   return {"message": "Logged out"}
 
 def get_current_admin(
     token: str = Depends(get_auth_token),

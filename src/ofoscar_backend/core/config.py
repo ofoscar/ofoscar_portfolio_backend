@@ -10,6 +10,8 @@ class Settings(BaseSettings):
   aws_region: str
   s3_bucket_name: str
   s3_public_url: str
+
+  cookie_secure: bool
   
   model_config = SettingsConfigDict(
     env_file=".env.app",
