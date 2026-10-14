@@ -11,7 +11,7 @@ class Settings(BaseSettings):
   s3_bucket_name: str
   s3_public_url: str
 
-  cookie_secure: bool
+  cookie_secure: bool = True
   
   model_config = SettingsConfigDict(
     env_file=".env.app",

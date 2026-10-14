@@ -26,6 +26,7 @@ jobs:
           POSTGRES_USER: ofoscar
           POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: ofoscar_test
+          COOKIE_SECURE: "false"
 
         ports:
           - 5432:5432
