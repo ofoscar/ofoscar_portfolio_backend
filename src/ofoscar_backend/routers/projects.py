@@ -13,8 +13,6 @@ router = APIRouter(
   tags=["Projects"],
 )
 
-projects: list[dict] = []
-
 @router.get("", response_model=list[ProjectResponse])
 def get_projects(
     db: Session = Depends(get_db)

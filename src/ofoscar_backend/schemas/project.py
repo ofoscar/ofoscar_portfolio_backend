@@ -41,6 +41,7 @@ class ProjectUpdate(BaseModel):
     cover_image_url: str | None = None
     published: bool | None = None
     tags: list[Tag] | None = None
+    highlights: list[HighLight] | None = None
     images: list[ProjectImageCreate] | None = None
 
 class ProjectCreate(BaseModel):
