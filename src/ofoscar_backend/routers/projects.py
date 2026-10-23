@@ -15,12 +15,24 @@ router = APIRouter(
 
 @router.get("", response_model=list[ProjectResponse])
 def get_projects(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_admin: str = Depends(get_current_admin)
 ):
     return (
       db.query(Project)
       .all()
       )
+
+@router.get("/published", response_model=list[ProjectResponse])
+def get_published_projects(
+    db:Session = Depends(get_db)
+):
+    return(
+        db.query(Project)
+        .filter(
+            Project.published == True
+        )
+    )
     
 
 @router.post(
