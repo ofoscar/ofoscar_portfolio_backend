@@ -29,8 +29,12 @@ def create_video(
   db: Session = Depends(get_db),
   current_admin: str = Depends(get_current_admin)
 ):
-  db.add(video)
-  db.commit()
-  db.refresh(video)
+  new_video = Video(
+    **video.model_dump()
+  )
 
-  return video
+  db.add(new_video)
+  db.commit()
+  db.refresh(new_video)
+
+  return new_video

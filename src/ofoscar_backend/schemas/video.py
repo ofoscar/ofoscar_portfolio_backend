@@ -1,5 +1,5 @@
 
-from datetime import date
+from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel
@@ -15,7 +15,7 @@ class VideoCreate(BaseModel):
   title: str
   slug: str
   type: VideoType
-  date_uploaded: date
+  date_uploaded: datetime
   category: VideoCategory
 
 class VideoResponse(VideoCreate):
