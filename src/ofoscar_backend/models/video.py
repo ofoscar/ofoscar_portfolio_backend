@@ -20,9 +20,14 @@ class Video(Base):
 
   date_uploaded: Mapped[datetime] = mapped_column(
     DateTime(timezone=True),
-    server_default=func.now()
+    server_default=func.now(),
   )
 
   category: Mapped[str] = mapped_column(
     String(200)
+  )
+
+  link: Mapped[str] = mapped_column(
+    String(100),
+    nullable=True
   )
