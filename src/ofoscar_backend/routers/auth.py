@@ -70,7 +70,7 @@ def login(
         value=access_token,
         httponly=True,
         secure=settings.cookie_secure,
-        samesite="lax",
+        samesite=settings.cookie_samesite,
         max_age=60 * 60,
         path="/",
     )
@@ -84,7 +84,7 @@ def logout(response: Response):
       path="/",
       secure=settings.cookie_secure,
       httponly=True,
-      samesite="lax"
+      samesite=settings.cookie_samesite,
    )
 
    return {"message": "Logged out"}
