@@ -224,7 +224,22 @@ DATABASE_URL=postgresql+psycopg2://ofoscar:password@localhost:5433/ofoscar
 AWS_REGION=
 S3_BUCKET_NAME=
 S3_PUBLIC_URL=
+CORS_ORIGINS=https://ofoscar.com
+COOKIE_SECURE=true
+COOKIE_SAMESITE=none
 ```
+
+For session cookies used across frontend and API sites, keep `COOKIE_SAMESITE=none` and `COOKIE_SECURE=true` in production. Set `CORS_ORIGINS` to the exact frontend origin(s), including scheme, such as `https://ofoscar.com`.
+
+For local development with Angular at `http://localhost:4200` and the API at `http://localhost:8000`, use:
+
+```env
+CORS_ORIGINS=http://localhost:4200
+COOKIE_SECURE=false
+COOKIE_SAMESITE=lax
+```
+
+Keep the host as `localhost` for both URLs. `SameSite=None` requires `Secure`, which browsers reject over local HTTP.
 
 Do not commit real secrets.
 

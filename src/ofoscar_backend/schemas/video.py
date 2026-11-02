@@ -17,6 +17,7 @@ class VideoCreate(BaseModel):
   type: VideoType
   date_uploaded: datetime
   category: VideoCategory
+  link: str
 
 class VideoResponse(VideoCreate):
   id: int
