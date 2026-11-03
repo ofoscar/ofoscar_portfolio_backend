@@ -77,3 +77,40 @@ def test_create_video_requires_all_schema_fields():
     response = client.post("/videos", json=payload)
 
     assert response.status_code == 422
+
+
+def test_update_video_updates_only_submitted_fields():
+    created = create_video()
+    assert created.status_code == 201
+    video = created.json()
+
+    response = client.patch(
+        f"/videos/{video['id']}",
+        json={"title": "Updated video title", "type": "Youtube video"},
+    )
+
+    assert response.status_code == 200
+    updated = response.json()
+    assert updated["title"] == "Updated video title"
+    assert updated["type"] == "Youtube video"
+    assert updated["slug"] == video["slug"]
+    assert updated["link"] == video["link"]
+
+
+def test_update_video_returns_404_when_video_does_not_exist():
+    response = client.patch("/videos/999999999", json={"title": "Updated title"})
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Video not found"}
+
+
+def test_update_video_rejects_invalid_type():
+    created = create_video()
+    assert created.status_code == 201
+
+    response = client.patch(
+        f"/videos/{created.json()['id']}",
+        json={"type": "Livestream"},
+    )
+
+    assert response.status_code == 422
