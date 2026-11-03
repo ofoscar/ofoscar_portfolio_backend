@@ -19,6 +19,14 @@ class VideoCreate(BaseModel):
   category: VideoCategory
   link: str
 
+class VideoUpdate(BaseModel):
+  title: str | None = None
+  slug: str | None = None
+  type: VideoType | None = None
+  date_uploaded: datetime | None = None
+  category: VideoCategory | None = None
+  link: str | None = None
+
 class VideoResponse(VideoCreate):
   id: int
 
