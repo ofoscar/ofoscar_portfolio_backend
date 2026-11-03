@@ -1,6 +1,6 @@
 
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from ofoscar_backend.database.session import get_db
@@ -22,6 +22,20 @@ def get_videos(
     db.query(Video)
     .all()
   )
+
+@router.get("/{video_id}", response_model=VideoResponse)
+def get_video(video_id: int,
+    db: Session = Depends(get_db)
+              ):
+  video = db.get(Video, video_id)
+
+  if video is None:
+    raise HTTPException(
+      status_code=status.HTTP_404_NOT_FOUND,
+      detail="Video not found"
+    )
+
+  return video
 
 @router.post("", response_model=VideoResponse, status_code=status.HTTP_201_CREATED)
 def create_video(
