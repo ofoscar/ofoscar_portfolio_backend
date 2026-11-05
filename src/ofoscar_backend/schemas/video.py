@@ -18,6 +18,7 @@ class VideoCreate(BaseModel):
   date_uploaded: datetime
   category: VideoCategory
   link: str
+  thumbnail_url: str | None = None
 
 class VideoUpdate(BaseModel):
   title: str | None = None
@@ -26,6 +27,7 @@ class VideoUpdate(BaseModel):
   date_uploaded: datetime | None = None
   category: VideoCategory | None = None
   link: str | None = None
+  thumbnail_url: str | None = None
 
 class VideoResponse(VideoCreate):
   id: int
