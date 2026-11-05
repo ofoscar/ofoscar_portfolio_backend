@@ -31,3 +31,8 @@ class Video(Base):
     String(100),
     nullable=True
   )
+
+  thumbnail_url: Mapped[str | None] = mapped_column(
+    String(1000),
+    nullable=True,
+  )

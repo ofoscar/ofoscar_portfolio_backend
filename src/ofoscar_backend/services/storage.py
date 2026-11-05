@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from typing import Literal
 
 from uuid import uuid4
 
@@ -16,8 +17,9 @@ def upload_image(
     file_size:int,
     content_type: str,
     file_extension: str,
+    folder: Literal["projects", "videos"] = "projects",
 ) -> str:
-  object_name = f"projects/{uuid4()}.{file_extension}"
+  object_name = f"{folder}/{uuid4()}.{file_extension}"
 
   s3.upload_fileobj(
         file_data,
