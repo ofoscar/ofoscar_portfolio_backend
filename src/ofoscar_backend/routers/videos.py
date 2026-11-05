@@ -7,6 +7,7 @@ from ofoscar_backend.database.session import get_db
 from ofoscar_backend.models.video import Video
 from ofoscar_backend.routers.auth import get_current_admin
 from ofoscar_backend.schemas.video import VideoCreate, VideoResponse, VideoUpdate
+from ofoscar_backend.services.storage import delete_image
 
 
 router = APIRouter(
@@ -68,7 +69,22 @@ def update_video(
       detail="Video not found",
     )
 
-  update_data = video_update.model_dump(exclude_unset=True, exclude_none=True)
+  update_data = video_update.model_dump(exclude_unset=True)
+  # Preserve the existing behavior for other fields while allowing clients to
+  # explicitly clear an optional thumbnail URL with null.
+  update_data = {
+    field: value
+    for field, value in update_data.items()
+    if value is not None or field == "thumbnail_url"
+  }
+
+  if "thumbnail_url" in update_data:
+    new_thumbnail_url = update_data["thumbnail_url"]
+    old_thumbnail_url = video.thumbnail_url
+
+    if old_thumbnail_url and old_thumbnail_url != new_thumbnail_url:
+      delete_image(old_thumbnail_url)
+
   for field, value in update_data.items():
     setattr(video, field, value)
 
