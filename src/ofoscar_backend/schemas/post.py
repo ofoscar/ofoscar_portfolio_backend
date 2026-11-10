@@ -1,6 +1,5 @@
 
 from pydantic import BaseModel
-
 class PostSection(BaseModel):
   title: str
   content: str
@@ -13,5 +12,12 @@ class PostCreate(BaseModel):
   slug: str
   category: str
   content: list[PostSection]
-  
+
+class PostResponse(PostCreate):
+  id: int
+
+  model_config = {
+    "from_attributes": True
+  }
+
 
