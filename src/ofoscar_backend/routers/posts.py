@@ -1,7 +1,8 @@
 
-from fastapi import APIRouter, Depends,status
+from fastapi import APIRouter, Depends, HTTPException,status
 
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from ofoscar_backend.models.post import Post
 from ofoscar_backend.routers.auth import get_current_admin
@@ -34,10 +35,25 @@ def create_post(
   db: Session = Depends(get_db),
   current_admin: str = Depends(get_current_admin)
 ):
-  post = Post(**post_data.model_dump())
-  
-  db.add(post)
-  db.commit()
-  db.refresh(post)
+  existing = db.query(Post).filter(Post.title == post_data.title).first()
 
+  if existing:
+    raise HTTPException(
+      status_code=status.HTTP_409_CONFLICT,
+      detail="A post with this title already exists",
+    )
+  
+  post = Post(**post_data.model_dump())
+  db.add(post)
+
+  try:
+    db.commit()
+  except IntegrityError:
+    db.rollback()
+    raise HTTPException(
+      status_code=status.HTTP_409_CONFLICT,
+      detail="A post with this title already exists"
+    )
+
+  db.refresh(post)
   return post
