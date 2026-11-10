@@ -9,6 +9,7 @@ from ofoscar_backend.database.base import Base
 from ofoscar_backend.models.project import Project
 from ofoscar_backend.models.project_image import ProjectImage
 from ofoscar_backend.models.video import Video
+from ofoscar_backend.models.post import Post
 
 from ofoscar_backend.core.config import settings
 
