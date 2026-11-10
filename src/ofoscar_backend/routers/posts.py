@@ -14,6 +14,16 @@ router = APIRouter(
   tags=["Posts"]
 )
 
+@router.get("", response_model=list[PostResponse])
+def get_posts(
+  db: Session = Depends(get_db),
+  current_admin: str = Depends(get_current_admin)
+):
+  return (
+    db.query(Post)
+    .all()
+  )
+
 @router.post(
   "",
   response_model=PostResponse,
@@ -25,7 +35,7 @@ def create_post(
   current_admin: str = Depends(get_current_admin)
 ):
   post = Post(**post_data.model_dump())
-
+  
   db.add(post)
   db.commit()
   db.refresh(post)
