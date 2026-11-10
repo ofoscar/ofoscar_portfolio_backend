@@ -17,7 +17,7 @@ router = APIRouter(
 @router.post(
   "",
   response_model=PostResponse,
-  status_code=status
+  status_code=status.HTTP_201_CREATED
 )
 def create_post(
   post_data: PostCreate,
