@@ -7,7 +7,7 @@ class Post(Base):
 
   id: Mapped[int] = mapped_column(primary_key=True)
 
-  title: Mapped[str] = mapped_column(String(60))
+  title: Mapped[str] = mapped_column(String(60), unique=True)
 
   cover_image_url: Mapped[str | None] = mapped_column(
     String(1000), 
