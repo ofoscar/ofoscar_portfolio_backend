@@ -4,6 +4,7 @@ from ofoscar_backend.database.session import SessionLocal
 from ofoscar_backend.models.video import Video
 from ofoscar_backend.models.project import Project
 from ofoscar_backend.models.project_image import ProjectImage
+from ofoscar_backend.models.post import Post
 
 
 @pytest.fixture(autouse=True)
@@ -12,6 +13,7 @@ def clean_database():
 
     db.query(ProjectImage).delete()
     db.query(Project).delete()
+    db.query(Post).delete()
     db.query(Video).delete()
 
     db.commit()
